@@ -7,7 +7,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 
@@ -22,6 +21,14 @@ const Register = () => {
   const [emails, setEmails] = useState("");
   const [validEmail, setValidEmail] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
+
+  const [city, setCity] = useState("");
+  const [validCity, setValidCity] = useState(false);
+  const [cityFocus, setCityFocus] = useState(false);
+
+  const [dob, setDob] = useState("");
+  const [validDob, setValidDob] = useState(false);
+  const [dobFocus, setDobFocus] = useState(false);
 
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
@@ -39,7 +46,10 @@ const Register = () => {
   }, []);
 
   useEffect(() => {
-    const result = USER_REGEX.test(user);
+    let result = null;
+    if (user === "") {
+      result = false;
+    } else result = true;
     console.log(result);
     console.log(user);
     setValidName(result);
@@ -51,6 +61,26 @@ const Register = () => {
     console.log(emails);
     setValidEmail(result);
   }, [emails]);
+
+  useEffect(() => {
+    let result = null;
+    if (city === "") {
+      result = false;
+    } else result = true;
+    console.log(result);
+    console.log(city);
+    setValidCity(result);
+  }, [city]);
+
+  useEffect(() => {
+    let result = null;
+    if (dob === "") {
+      result = false;
+    } else result = true;
+    console.log(result);
+    console.log(dob);
+    setValidDob(result);
+  }, [dob]);
 
   useEffect(() => {
     const result = PWD_REGEX.test(pwd);
@@ -67,7 +97,7 @@ const Register = () => {
 
   const handlerSubmit = async (e) => {
     e.preventDefault();
-    const v1 = USER_REGEX.test(user);
+    const v1 = EMAIL_REGEX.test(emails);
     const v2 = PWD_REGEX.test(pwd);
     if (!v1 | !v2) {
       setErrMsg("Invalid Entry");
@@ -124,8 +154,7 @@ const Register = () => {
                 userFocus && user && !validName ? "instructions" : "offscreen"
               }
             >
-              <FontAwesomeIcon icon={faInfoCircle} /> 4 to 24 characters.
-              <br />
+              <FontAwesomeIcon icon={faInfoCircle} />
               Must begin with a letter.
               <br />
               Letters, numbers, underscores, hypens allowed.
@@ -163,6 +192,73 @@ const Register = () => {
             >
               <FontAwesomeIcon icon={faInfoCircle} /> Please input your email
               account correctly
+            </p>
+
+            <label htmlFor="city">
+              City:
+              <span className={validCity ? "valid" : "hide"}>
+                <FontAwesomeIcon icon={faCheck} />
+              </span>
+              <span className={validCity || !city ? "hide" : "invalid"}>
+                <FontAwesomeIcon icon={faTimes} />
+              </span>
+            </label>
+
+            <input
+              type="text"
+              id="city"
+              autoComplete="off"
+              onChange={(e) => setCity(e.target.value)}
+              required
+              aria-invalid={validName ? "false" : "true"}
+              aria-describedby="uidnote"
+              onFocus={() => setCityFocus(true)}
+              onBlur={() => setCityFocus(false)}
+            />
+            <p
+              id="uidnote"
+              className={
+                cityFocus && city && !validCity ? "instructions" : "offscreen"
+              }
+            >
+              <FontAwesomeIcon icon={faInfoCircle} /> 4 to 24 characters.
+              <br />
+              Must begin with a letter.
+              <br />
+              Letters, numbers, underscores, hypens allowed.
+            </p>
+
+            <label htmlFor="dob">
+              Date of Birth:
+              <span className={validDob ? "valid" : "hide"}>
+                <FontAwesomeIcon icon={faCheck} />
+              </span>
+              <span className={validDob || !dob ? "hide" : "invalid"}>
+                <FontAwesomeIcon icon={faTimes} />
+              </span>
+            </label>
+            <input
+              type="date"
+              id="dob"
+              autoComplete="off"
+              onChange={(e) => setDob(e.target.value)}
+              required
+              aria-invalid={validName ? "false" : "true"}
+              aria-describedby="uidnote"
+              onFocus={() => setDobFocus(true)}
+              onBlur={() => setDobFocus(false)}
+            />
+            <p
+              id="uidnote"
+              className={
+                dobFocus && dob && !validDob ? "instructions" : "offscreen"
+              }
+            >
+              <FontAwesomeIcon icon={faInfoCircle} /> 4 to 24 characters.
+              <br />
+              Must begin with a letter.
+              <br />
+              Letters, numbers, underscores, hypens allowed.
             </p>
 
             <label htmlFor="password">

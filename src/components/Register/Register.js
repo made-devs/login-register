@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 
 const Register = () => {
   const userRef = useRef();
@@ -17,6 +18,10 @@ const Register = () => {
   const [user, setUser] = useState("");
   const [validName, setValidName] = useState(false);
   const [userFocus, setUserFocus] = useState(false);
+
+  const [emails, setEmails] = useState("");
+  const [validEmail, setValidEmail] = useState(false);
+  const [emailFocus, setEmailFocus] = useState(false);
 
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
@@ -39,6 +44,13 @@ const Register = () => {
     console.log(user);
     setValidName(result);
   }, [user]);
+
+  useEffect(() => {
+    const result = EMAIL_REGEX.test(emails);
+    console.log(result);
+    console.log(emails);
+    setValidEmail(result);
+  }, [emails]);
 
   useEffect(() => {
     const result = PWD_REGEX.test(pwd);
@@ -116,7 +128,41 @@ const Register = () => {
               <br />
               Must begin with a letter.
               <br />
-              Letters, numbersm underscores, hypens allowed.
+              Letters, numbers, underscores, hypens allowed.
+            </p>
+
+            <label htmlFor="email">
+              Email:
+              <span className={validEmail ? "valid" : "hide"}>
+                <FontAwesomeIcon icon={faCheck} />
+              </span>
+              <span className={validEmail || !emails ? "hide" : "invalid"}>
+                <FontAwesomeIcon icon={faTimes} />
+              </span>
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              autoComplete="off"
+              onChange={(e) => setEmails(e.target.value)}
+              required
+              aria-invalid={validName ? "false" : "true"}
+              aria-describedby="uidnote"
+              onFocus={() => setEmailFocus(true)}
+              onBlur={() => setEmailFocus(false)}
+            />
+
+            <p
+              id="uidnote"
+              className={
+                emailFocus && emails && !validEmail
+                  ? "instructions"
+                  : "offscreen"
+              }
+            >
+              <FontAwesomeIcon icon={faInfoCircle} /> Please input your email
+              account correctly
             </p>
 
             <label htmlFor="password">
@@ -184,7 +230,11 @@ const Register = () => {
             </p>
 
             <button
-              disabled={!validName || !validPwd || !validMatch ? true : false}
+              disabled={
+                !validName || !validPwd || !validMatch || !validEmail
+                  ? true
+                  : false
+              }
             >
               Sign Up
             </button>
